@@ -1,0 +1,6 @@
+/plugin/readdir.vim export-subst
+/syntax/readdir.vim export-subst
+/.gitignore         export-ignore
+/.gitattributes     export-ignore
+/README.md          export-ignore
+/LICENSE            export-ignore

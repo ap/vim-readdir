@@ -1,0 +1,38 @@
+*readdir.txt* A very minimal directory browser
+
+		READDIR  by Aristotle Pagaltzis
+
+==============================================================================
+0. Contents                                                            *readdir*
+
+    1. Intro ....................................... |readdir-intro|
+    2. Configuration settings ...................... |readdir-config|
+    3. Source ...................................... |readdir-source|
+
+
+==============================================================================
+1. Intro                                                         *readdir-intro*
+
+This plugin detects implements a minimal directory browser. To use it, just
+open a directory and use Enter to change into directories or open files.
+
+
+==============================================================================
+2. Configuration settings                                       *readdir-config*
+
+*g:readdir_hidden*          number (default 0)
+
+    The value of this option specifies which files to hide:
+             0: hide hidden files and respect 'wildignore'
+             1: hide hidden files only
+             2: show everything
+    You can cycle this setting with the "a" mapping.
+
+
+==============================================================================
+3. Source                                                    *buftabline-source*
+
+https://github.com/ap/vim-readdir
+
+
+vim:tw=78:et:ft=help:norl:
