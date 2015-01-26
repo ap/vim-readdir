@@ -104,9 +104,10 @@ function readdir#Open()
 	endif
 
 	unlet b:readdir_id b:readdir_cwd b:readdir_content
-	setlocal modifiable< undolevels< buftype< filetype<
+	setlocal modifiable< buftype< filetype<
 	mapclear <buffer>
 	call s:set_bufname(path) | go | edit
+	setlocal undolevels< " left late to avoid leaving the content change during :edit on undo stack
 
 	" :file sets the notedited flag but :edit does not clear it (see :help not-edited)
 	" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
