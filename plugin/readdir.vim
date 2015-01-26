@@ -54,6 +54,7 @@ function readdir#Setup()
 	endif
 
 	nnoremap <buffer> <silent> <CR> :call readdir#Open()<CR>
+	nnoremap <buffer> <silent> o    :call readdir#OpenNew()<CR>
 	nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 	setlocal undolevels=-1 buftype=nofile filetype=readdir
 
@@ -111,6 +112,10 @@ function readdir#Open()
 	" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
 	autocmd ReadDir BufWriteCmd <buffer> autocmd! ReadDir BufWriteCmd <buffer>
 	write!
+endfunction
+
+function readdir#OpenNew()
+	edit `=s:current_entry()`
 endfunction
 
 function readdir#CycleHidden()
