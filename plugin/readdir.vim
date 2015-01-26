@@ -35,6 +35,10 @@ function s:set_bufname(name)
 	exe 'silent! bwipeout!' bufnr('#')
 endfunction
 
+function s:current_entry()
+	return b:readdir_content[ line('.') - 1 ]
+endfunction
+
 function readdir#Setup()
 	if ! exists('b:readdir_cwd')
 		let path = expand('<afile>')
@@ -90,7 +94,7 @@ function readdir#Show()
 endfunction
 
 function readdir#Open()
-	let path = b:readdir_content[ line('.') - 1 ]
+	let path = s:current_entry()
 
 	if isdirectory(path)
 		let b:readdir_prev = b:readdir_cwd
@@ -111,7 +115,7 @@ endfunction
 
 function readdir#CycleHidden()
 	let g:readdir_hidden = ( g:readdir_hidden + 1 ) % 3
-	let b:readdir_prev = b:readdir_content[ line('.') - 1 ]
+	let b:readdir_prev = s:current_entry()
 	call readdir#Show()
 endfunction
 
