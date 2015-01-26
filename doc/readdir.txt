@@ -16,7 +16,9 @@
 This plugin detects implements a minimal directory browser. To use it, just
 open a directory and use Enter to change into directories or open files.
 
-
+If you want to suppress Netrw (likely), add this to your `.vimrc`: >
+    let g:loaded_netrwPlugin = 1
+<
 ==============================================================================
 2. Configuration settings                                       *readdir-config*
 
