@@ -55,6 +55,7 @@ function readdir#Setup()
 
 	nnoremap <buffer> <silent> <CR> :call readdir#Open()<CR>
 	nnoremap <buffer> <silent> o    :call readdir#OpenNew()<CR>
+	nnoremap <buffer> <silent> t    :call readdir#OpenTab()<CR>
 	nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 	setlocal undolevels=-1 buftype=nofile filetype=readdir
 
@@ -117,6 +118,10 @@ endfunction
 
 function readdir#OpenNew()
 	edit `=s:current_entry()`
+endfunction
+
+function readdir#OpenTab()
+	tabedit `=s:current_entry()`
 endfunction
 
 function readdir#CycleHidden()
