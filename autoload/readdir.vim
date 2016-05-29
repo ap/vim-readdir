@@ -31,8 +31,9 @@ let g:readdir_hidden = get(g:, 'readdir_hidden', 0)
 
 function s:set_bufname(name)
 	if bufname('%') == a:name | return | endif
-	silent! file `=a:name`
-	exe 'silent! bwipeout!' bufnr('#')
+	let prev_alt = bufnr('#')
+	silent! file `=a:name` " on success, creates an alt buffer to hold the old name
+	if bufnr('#') != prev_alt | exe 'silent! bwipeout!' bufnr('#') | endif
 endfunction
 
 function s:current_entry()
