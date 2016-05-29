@@ -30,10 +30,11 @@ endif
 let g:readdir_hidden = get(g:, 'readdir_hidden', 0)
 
 function s:set_bufname(name)
-	if bufname('%') == a:name | return | endif
+	if bufname('%') == a:name | return 1 | endif
 	let prev_alt = bufnr('#')
 	silent! file `=a:name` " on success, creates an alt buffer to hold the old name
 	if bufnr('#') != prev_alt | exe 'silent! bwipeout!' bufnr('#') | endif
+	return bufname('%') == a:name
 endfunction
 
 function s:current_entry()
@@ -108,13 +109,19 @@ function readdir#Open()
 	unlet b:readdir_id b:readdir_cwd b:readdir_content
 	setlocal modifiable< buftype< filetype<
 	mapclear <buffer>
-	call s:set_bufname(path) | go | edit
-	setlocal undolevels< " left late to avoid leaving the content change during :edit on undo stack
+	if s:set_bufname(path)
+		go | edit
+		setlocal undolevels< " left late to avoid leaving the content change during :edit on undo stack
 
-	" :file sets the notedited flag but :edit does not clear it (see :help not-edited)
-	" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
-	autocmd ReadDir BufWriteCmd <buffer> autocmd! ReadDir BufWriteCmd <buffer>
-	write!
+		" :file sets the notedited flag but :edit does not clear it (see :help not-edited)
+		" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
+		autocmd ReadDir BufWriteCmd <buffer> autocmd! ReadDir BufWriteCmd <buffer>
+		write!
+	else " file already open in another buffer, just switch
+		let me = bufnr('%')
+		exe 'edit' path
+		exe 'silent! bwipeout!' me
+	endif
 endfunction
 
 function readdir#OpenNew()
