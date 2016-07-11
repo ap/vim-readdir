@@ -106,10 +106,11 @@ function readdir#Open()
 		return readdir#Show()
 	endif
 
-	unlet b:readdir_id b:readdir_cwd b:readdir_content
-	setlocal modifiable< buftype< filetype<
-	mapclear <buffer>
 	if s:set_bufname(path)
+		unlet b:readdir_id b:readdir_cwd b:readdir_content
+		setlocal modifiable< buftype< filetype<
+		mapclear <buffer>
+
 		go | edit
 		setlocal undolevels< " left late to avoid leaving the content change during :edit on undo stack
 
