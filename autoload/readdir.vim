@@ -84,7 +84,7 @@ function readdir#Show()
 	endif
 
 	setlocal modifiable
-	0,$ delete
+	silent 0,$ delete
 	call setline(1, prettied)
 	setlocal nomodifiable nomodified
 
