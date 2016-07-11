@@ -62,10 +62,14 @@ function readdir#Setup()
 	setlocal undolevels=-1 buftype=nofile filetype=readdir
 
 	call readdir#Show()
+
+	autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir_cwd`
 endfunction
 
 function readdir#Show()
 	if ! exists('b:readdir_cwd') | return | endif
+
+	silent lchdir `=b:readdir_cwd`
 
 	let path = simplify(b:readdir_cwd.'/.')
 	call s:set_bufname(printf('(%d) %s', b:readdir_id, path))
@@ -110,6 +114,7 @@ function readdir#Open()
 		unlet b:readdir_id b:readdir_cwd b:readdir_content
 		setlocal modifiable< buftype< filetype<
 		mapclear <buffer>
+		autocmd! ReadDir BufEnter <buffer>
 
 		go | edit
 		setlocal undolevels< " left late to avoid leaving the content change during :edit on undo stack
