@@ -45,11 +45,8 @@ function readdir#Selected()
 endfunction
 
 function readdir#Setup()
-	if ! exists('b:readdir_cwd')
-		let path = expand('<afile>')
-		if ! isdirectory(path) | return | endif
-		let b:readdir_cwd = simplify(fnamemodify(path, ':p').'.')
-	endif
+	let path = expand('<afile>')
+	if ! isdirectory(path) | return | endif
 
 	if ! exists('b:readdir_id')
 		let id = range(1,bufnr('$'))
@@ -58,19 +55,20 @@ function readdir#Setup()
 		let b:readdir_id = id[0]
 	endif
 
-	nnoremap <buffer> <silent> <CR> :call readdir#Open()<CR>
+	nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
 	nnoremap <buffer> <silent> o    :edit `=readdir#Selected()`<CR>
 	nnoremap <buffer> <silent> t    :tabedit `=readdir#Selected()`<CR>
 	nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 	setlocal undolevels=-1 buftype=nofile filetype=readdir
 
-	call readdir#Show()
+	call readdir#Show( simplify( fnamemodify(path, ':p').'.' ), '' )
 
 	autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir_cwd`
 endfunction
 
-function readdir#Show()
-	if ! exists('b:readdir_cwd') | return | endif
+function readdir#Show(path, focus)
+	if a:path == get(b:, 'readdir_cwd', '') | return | endif
+	let b:readdir_cwd = a:path
 
 	silent lchdir `=b:readdir_cwd`
 	call s:set_bufname(printf('(%d) %s', b:readdir_id, b:readdir_cwd))
@@ -90,24 +88,17 @@ function readdir#Show()
 	setlocal nomodifiable nomodified
 
 	let line = 1
-	if exists('b:readdir_prev')
-		let line = 1 + index(b:readdir_content, b:readdir_prev)
+	if strlen(a:focus)
+		let line = 1 + index(b:readdir_content, a:focus)
 		let line += line == 0
-		unlet b:readdir_prev
 	endif
 	call cursor(line, 1)
 endfunction
 
-function readdir#Open()
-	let path = readdir#Selected()
+function readdir#Open(path)
+	if isdirectory(a:path) | return readdir#Show( a:path, b:readdir_cwd ) | endif
 
-	if isdirectory(path)
-		let b:readdir_prev = b:readdir_cwd
-		let b:readdir_cwd = path
-		return readdir#Show()
-	endif
-
-	if s:set_bufname(path)
+	if s:set_bufname(a:path)
 		silent chdir `=expand('%:p:h')` " reset haslocaldir()
 		unlet b:readdir_id b:readdir_cwd b:readdir_content
 		setlocal modifiable< buftype< filetype<
@@ -123,15 +114,14 @@ function readdir#Open()
 		write!
 	else " file already open in another buffer, just switch
 		let me = bufnr('%')
-		exe 'edit' path
+		exe 'edit' a:path
 		exe 'silent! bwipeout!' me
 	endif
 endfunction
 
 function readdir#CycleHidden()
 	let g:readdir_hidden = ( g:readdir_hidden + 1 ) % 3
-	let b:readdir_prev = readdir#Selected()
-	call readdir#Show()
+	call readdir#Show( b:readdir_cwd, readdir#Selected() )
 endfunction
 
 " vim:foldmethod=marker
