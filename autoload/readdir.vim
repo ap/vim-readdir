@@ -27,6 +27,9 @@ if v:version < 700
 	finish
 endif
 
+exe printf( join( [ 'function s:glob(path, nosuf)', 'return %s', 'endfunction' ], "\n" ),
+	\ v:version < 704 ? 'split(glob(a:path, a:nosuf), "\n")' : 'glob(a:path, a:nosuf, 1)' )
+
 let g:readdir_hidden = get(g:, 'readdir_hidden', 0)
 
 function s:set_bufname(name)
@@ -75,8 +78,8 @@ function readdir#Show()
 	let path = fnamemodify(b:readdir_cwd, ':p') " ensure trailing slash
 	let b:readdir_content
 		\ = [fnamemodify(b:readdir_cwd,':h')]
-		\ + ( g:readdir_hidden == 2 ? glob(path.'.[^.]', 0, 1) + glob(path.'.??*', 0, 1) : [] )
-		\ + glob(path.'*', g:readdir_hidden, 1)
+		\ + ( g:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
+		\ + s:glob(path.'*', g:readdir_hidden)
 
 	let prettied = map(copy(b:readdir_content), 'substitute(v:val, "^.*/", "", "") . ( isdirectory(v:val) ? "/" : "" )')
 	let prettied[0] = '..'
