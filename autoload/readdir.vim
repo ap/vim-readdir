@@ -40,7 +40,7 @@ function s:set_bufname(name)
 	return bufname('%') == a:name
 endfunction
 
-function s:current_entry()
+function readdir#Selected()
 	return b:readdir_content[ line('.') - 1 ]
 endfunction
 
@@ -59,8 +59,8 @@ function readdir#Setup()
 	endif
 
 	nnoremap <buffer> <silent> <CR> :call readdir#Open()<CR>
-	nnoremap <buffer> <silent> o    :call readdir#OpenNew()<CR>
-	nnoremap <buffer> <silent> t    :call readdir#OpenTab()<CR>
+	nnoremap <buffer> <silent> o    :edit `=readdir#Selected()`<CR>
+	nnoremap <buffer> <silent> t    :tabedit `=readdir#Selected()`<CR>
 	nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 	setlocal undolevels=-1 buftype=nofile filetype=readdir
 
@@ -99,7 +99,7 @@ function readdir#Show()
 endfunction
 
 function readdir#Open()
-	let path = s:current_entry()
+	let path = readdir#Selected()
 
 	if isdirectory(path)
 		let b:readdir_prev = b:readdir_cwd
@@ -128,17 +128,9 @@ function readdir#Open()
 	endif
 endfunction
 
-function readdir#OpenNew()
-	edit `=s:current_entry()`
-endfunction
-
-function readdir#OpenTab()
-	tabedit `=s:current_entry()`
-endfunction
-
 function readdir#CycleHidden()
 	let g:readdir_hidden = ( g:readdir_hidden + 1 ) % 3
-	let b:readdir_prev = s:current_entry()
+	let b:readdir_prev = readdir#Selected()
 	call readdir#Show()
 endfunction
 
