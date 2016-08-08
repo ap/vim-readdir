@@ -105,6 +105,7 @@ function readdir#Open()
 	endif
 
 	if s:set_bufname(path)
+		silent chdir `=expand('%:p:h')` " reset haslocaldir()
 		unlet b:readdir_id b:readdir_cwd b:readdir_content
 		setlocal modifiable< buftype< filetype<
 		mapclear <buffer>
