@@ -74,11 +74,12 @@ function readdir#Show()
 	let path = simplify(b:readdir_cwd.'/.')
 	call s:set_bufname(printf('(%d) %s', b:readdir_id, path))
 
-	let b:readdir_content = glob(path.'/*', g:readdir_hidden, 1)
+	let path = fnamemodify(b:readdir_cwd, ':p') " ensure trailing slash
+	let b:readdir_content = glob(path.'*', g:readdir_hidden, 1)
 	if g:readdir_hidden == 2
-		call extend(b:readdir_content, glob(path.'/.?*', 0, 1), 0)
-	elseif isdirectory(path.'/..')
-		call extend(b:readdir_content, [path.'/..'], 0)
+		call extend(b:readdir_content, glob(path.'.?*', 0, 1), 0)
+	elseif isdirectory(path.'..')
+		call extend(b:readdir_content, [path.'..'], 0)
 	endif
 
 	let prettied = map(copy(b:readdir_content), 'substitute(v:val, "^.*/", "", "") . ( isdirectory(v:val) ? "/" : "" )')
