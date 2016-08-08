@@ -58,6 +58,7 @@ function readdir#Setup()
 	nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
 	nnoremap <buffer> <silent> o    :edit `=readdir#Selected()`<CR>
 	nnoremap <buffer> <silent> t    :tabedit `=readdir#Selected()`<CR>
+	nnoremap <buffer> <silent> -    :call readdir#Open( fnamemodify( b:readdir_cwd, ':h' ) )<CR>
 	nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 	setlocal undolevels=-1 buftype=nofile filetype=readdir
 
