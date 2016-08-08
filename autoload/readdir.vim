@@ -45,7 +45,7 @@ function readdir#Setup()
 	if ! exists('b:readdir_cwd')
 		let path = expand('<afile>')
 		if ! isdirectory(path) | return | endif
-		let b:readdir_cwd = simplify(fnamemodify(path, ':p'))
+		let b:readdir_cwd = simplify(fnamemodify(path, ':p').'.')
 	endif
 
 	if ! exists('b:readdir_id')
