@@ -70,9 +70,7 @@ function readdir#Show()
 	if ! exists('b:readdir_cwd') | return | endif
 
 	silent lchdir `=b:readdir_cwd`
-
-	let path = simplify(b:readdir_cwd.'/.')
-	call s:set_bufname(printf('(%d) %s', b:readdir_id, path))
+	call s:set_bufname(printf('(%d) %s', b:readdir_id, b:readdir_cwd))
 
 	let path = fnamemodify(b:readdir_cwd, ':p') " ensure trailing slash
 	let b:readdir_content = glob(path.'*', g:readdir_hidden, 1)
