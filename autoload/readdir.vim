@@ -73,18 +73,13 @@ function readdir#Show()
 	call s:set_bufname(printf('(%d) %s', b:readdir_id, b:readdir_cwd))
 
 	let path = fnamemodify(b:readdir_cwd, ':p') " ensure trailing slash
-	let b:readdir_content = glob(path.'*', g:readdir_hidden, 1)
-	if g:readdir_hidden == 2
-		call extend(b:readdir_content, glob(path.'.?*', 0, 1), 0)
-	elseif isdirectory(path.'..')
-		call extend(b:readdir_content, [path.'..'], 0)
-	endif
+	let b:readdir_content
+		\ = [fnamemodify(b:readdir_cwd,':h')]
+		\ + ( g:readdir_hidden == 2 ? glob(path.'.[^.]', 0, 1) + glob(path.'.??*', 0, 1) : [] )
+		\ + glob(path.'*', g:readdir_hidden, 1)
 
 	let prettied = map(copy(b:readdir_content), 'substitute(v:val, "^.*/", "", "") . ( isdirectory(v:val) ? "/" : "" )')
-	if '../' == prettied[0]
-		let prettied[0] = '..'
-		let b:readdir_content[0] = simplify(b:readdir_content[0])
-	endif
+	let prettied[0] = '..'
 
 	setlocal modifiable
 	silent 0,$ delete
