@@ -79,12 +79,9 @@ function readdir#Show(path, focus)
 		\ + ( g:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
 		\ + s:glob(path.'*', g:readdir_hidden)
 
-	let prettied = map(copy(b:readdir_content), 'substitute(v:val, "^.*/", "", "") . ( isdirectory(v:val) ? "/" : "" )')
-	let prettied[0] = '..'
-
 	setlocal modifiable
 	silent 0,$ delete
-	call setline(1, prettied)
+	call setline( 1, ['..'] + map( b:readdir_content[1:], 'matchstr( fnamemodify(v:val,":p"), ''[^/]\+/\?$'' )' ) )
 	setlocal nomodifiable nomodified
 
 	let line = 1 + index(b:readdir_content, a:focus)
