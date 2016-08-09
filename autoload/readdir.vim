@@ -54,16 +54,14 @@ function readdir#Setup()
 		let b:readdir_id = filter(id,'index(taken,v:val) < 0')[0]
 	endif
 
+	call readdir#Show( simplify( fnamemodify(path, ':p').'.' ), '' )
+
+	autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir_cwd`
 	nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
 	nnoremap <buffer> <silent> o    :edit `=readdir#Selected()`<CR>
 	nnoremap <buffer> <silent> t    :tabedit `=readdir#Selected()`<CR>
 	nnoremap <buffer> <silent> -    :call readdir#Open( fnamemodify( b:readdir_cwd, ':h' ) )<CR>
 	nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
-	setlocal undolevels=-1 buftype=nofile filetype=readdir
-
-	call readdir#Show( simplify( fnamemodify(path, ':p').'.' ), '' )
-
-	autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir_cwd`
 endfunction
 
 function readdir#Show(path, focus)
@@ -79,7 +77,7 @@ function readdir#Show(path, focus)
 		\ + ( g:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
 		\ + s:glob(path.'*', g:readdir_hidden)
 
-	setlocal modifiable
+	setlocal modifiable undolevels=-1 buftype=nofile filetype=readdir
 	silent 0,$ delete
 	call setline( 1, ['..'] + map( b:readdir_content[1:], 'matchstr( fnamemodify(v:val,":p"), ''[^/]\+/\?$'' )' ) )
 	setlocal nomodifiable nomodified
