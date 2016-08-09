@@ -31,6 +31,7 @@ exe printf( join( [ 'function s:glob(path, nosuf)', 'return %s', 'endfunction' ]
 	\ v:version < 704 ? 'split(glob(a:path, a:nosuf), "\n")' : 'glob(a:path, a:nosuf, 1)' )
 
 let g:readdir_hidden = get(g:, 'readdir_hidden', 0)
+let s:sep = fnamemodify('',':p')[-1:]
 
 function s:set_bufname(name)
 	if bufname('%') == a:name | return 1 | endif
@@ -79,7 +80,7 @@ function readdir#Show(path, focus)
 
 	setlocal modifiable undolevels=-1 buftype=nofile filetype=readdir
 	silent 0,$ delete
-	call setline( 1, ['..'] + map( b:readdir_content[1:], 'matchstr( fnamemodify(v:val,":p"), ''[^/]\+/\?$'' )' ) )
+	call setline( 1, ['..'] + map( b:readdir_content[1:], 'split(v:val,s:sep)[-1] . fnamemodify(v:val,":p")[-1:]' ) )
 	setlocal nomodifiable nomodified
 
 	let line = 1 + index(b:readdir_content, a:focus)
