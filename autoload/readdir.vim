@@ -87,12 +87,8 @@ function readdir#Show(path, focus)
 	call setline(1, prettied)
 	setlocal nomodifiable nomodified
 
-	let line = 1
-	if strlen(a:focus)
-		let line = 1 + index(b:readdir_content, a:focus)
-		let line += line == 0
-	endif
-	call cursor(line, 1)
+	let line = 1 + index(b:readdir_content, a:focus)
+	call cursor(line ? line : 1, 1)
 endfunction
 
 function readdir#Open(path)
