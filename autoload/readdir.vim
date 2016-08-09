@@ -50,9 +50,8 @@ function readdir#Setup()
 
 	if ! exists('b:readdir_id')
 		let id = range(1,bufnr('$'))
-		let taken = filter(map(copy(id),'getbufvar(v:val,"readdir_id")'),'strlen(v:val)')
-		call filter(id,'index(taken,v:val) < 0')
-		let b:readdir_id = id[0]
+		let taken = map(copy(id),'getbufvar(v:val,"readdir_id")')
+		let b:readdir_id = filter(id,'index(taken,v:val) < 0')[0]
 	endif
 
 	nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
