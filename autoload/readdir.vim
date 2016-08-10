@@ -45,23 +45,24 @@ function readdir#Selected()
 endfunction
 
 function readdir#Show(path, focus)
-	let b:readdir_cwd = a:path
-	silent lchdir `=b:readdir_cwd`
-	call s:set_bufname(printf('(%d) %s', b:readdir_id, b:readdir_cwd))
+	silent lchdir `=a:path`
+	call s:set_bufname(printf('(%d) %s', b:readdir_id, a:path))
 
-	let path = fnamemodify(b:readdir_cwd, ':p') " ensure trailing slash
-	let b:readdir_content
-		\ = [fnamemodify(b:readdir_cwd,':h')]
+	let path = fnamemodify(a:path, ':p') " ensure trailing slash
+	let content
+		\ = [fnamemodify(a:path,':h')]
 		\ + ( b:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
 		\ + s:glob(path.'*', b:readdir_hidden)
 
 	setlocal modifiable
 	silent 0,$ delete
-	call setline( 1, ['..'] + map( b:readdir_content[1:], 'split(v:val,s:sep)[-1] . ( isdirectory(v:val) ? s:sep : "" )' ) )
+	call setline( 1, ['..'] + map( content[1:], 'split(v:val,s:sep)[-1] . ( isdirectory(v:val) ? s:sep : "" )' ) )
 	setlocal nomodifiable nomodified
 
-	let line = 1 + index(b:readdir_content, a:focus)
+	let line = 1 + index(content, a:focus)
 	call cursor(line ? line : 1, 1)
+
+	let [ b:readdir_cwd, b:readdir_content ] = [ a:path, content ]
 endfunction
 
 function readdir#Open(path)
