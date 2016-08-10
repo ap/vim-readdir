@@ -104,7 +104,7 @@ function readdir#Open(path)
 		go | edit!
 	else " file already open in another buffer, just switch
 		let me = bufnr('%')
-		exe 'edit' a:path
+		edit `=a:path`
 		exe 'silent! bwipeout!' me
 	endif
 endfunction
