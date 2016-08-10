@@ -97,12 +97,12 @@ function readdir#Open(path)
 		mapclear <buffer>
 		autocmd! ReadDir BufEnter <buffer>
 
+		autocmd ReadDir BufReadPre <buffer> set undolevels< " avoid leaving :edit content change on undo stack
 		go | edit
-		set undolevels< " left late to avoid leaving the content change during :edit on undo stack
 
 		" :file sets the notedited flag but :edit does not clear it (see :help not-edited)
 		" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
-		autocmd ReadDir BufWriteCmd <buffer> autocmd! ReadDir BufWriteCmd <buffer>
+		autocmd ReadDir BufWriteCmd <buffer> autocmd! ReadDir * <buffer>
 		write!
 	else " file already open in another buffer, just switch
 		let me = bufnr('%')
