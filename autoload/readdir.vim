@@ -45,9 +45,7 @@ function readdir#Selected()
 endfunction
 
 function readdir#Show(path, focus)
-	if a:path == get(b:, 'readdir_cwd', '') | return | endif
 	let b:readdir_cwd = a:path
-
 	silent lchdir `=b:readdir_cwd`
 	call s:set_bufname(printf('(%d) %s', b:readdir_id, b:readdir_cwd))
 
@@ -67,7 +65,7 @@ function readdir#Show(path, focus)
 endfunction
 
 function readdir#Open(path)
-	if isdirectory(a:path) | return readdir#Show( a:path, b:readdir_cwd ) | endif
+	if isdirectory(a:path) | return a:path == b:readdir_cwd || readdir#Show( a:path, b:readdir_cwd ) | endif
 
 	if s:set_bufname(a:path)
 		unlet b:readdir_id b:readdir_cwd b:readdir_content b:readdir_hidden
