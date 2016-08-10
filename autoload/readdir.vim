@@ -46,8 +46,7 @@ function readdir#Selected()
 endfunction
 
 function readdir#Setup()
-	let path = expand('<afile>')
-	if ! isdirectory(path) | return | endif
+	if ! isdirectory(expand('%')) | return | endif
 
 	if ! exists('b:readdir_id')
 		let id = range(1,bufnr('$'))
@@ -55,7 +54,7 @@ function readdir#Setup()
 		let b:readdir_id = filter(id,'index(taken,v:val) < 0')[0]
 	endif
 
-	call readdir#Show( simplify( fnamemodify(path, ':p').'.' ), '' )
+	call readdir#Show( simplify( expand('%:p').'.' ), '' )
 
 	autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir_cwd`
 	nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
