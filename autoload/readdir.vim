@@ -78,7 +78,7 @@ function readdir#Show(path, focus)
 		\ + ( g:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
 		\ + s:glob(path.'*', g:readdir_hidden)
 
-	setlocal modifiable undolevels=-1 buftype=nofile filetype=readdir
+	setlocal modifiable buftype=nofile filetype=readdir undolevels=-1
 	silent 0,$ delete
 	call setline( 1, ['..'] + map( b:readdir_content[1:], 'split(v:val,s:sep)[-1] . ( isdirectory(v:val) ? s:sep : "" )' ) )
 	setlocal nomodifiable nomodified
@@ -93,12 +93,12 @@ function readdir#Open(path)
 	if s:set_bufname(a:path)
 		silent chdir `=expand('%:p:h')` " reset haslocaldir()
 		unlet b:readdir_id b:readdir_cwd b:readdir_content
-		setlocal modifiable< buftype< filetype<
+		set modifiable< buftype< filetype<
 		mapclear <buffer>
 		autocmd! ReadDir BufEnter <buffer>
 
 		go | edit
-		setlocal undolevels< " left late to avoid leaving the content change during :edit on undo stack
+		set undolevels< " left late to avoid leaving the content change during :edit on undo stack
 
 		" :file sets the notedited flag but :edit does not clear it (see :help not-edited)
 		" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
