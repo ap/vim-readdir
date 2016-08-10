@@ -41,7 +41,7 @@ autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir.cwd`
 nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
 nnoremap <buffer> <silent> o    :edit `=readdir#Selected()`<CR>
 nnoremap <buffer> <silent> t    :tabedit `=readdir#Selected()`<CR>
-nnoremap <buffer> <silent> -    :call readdir#Open( fnamemodify( b:readdir.cwd, ':h' ) )<CR>
+nnoremap <buffer> <silent> -    :call readdir#Open( b:readdir.content[0] )<CR>
 nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 
 " vim:foldmethod=marker
