@@ -32,6 +32,7 @@ if exists('b:readdir_id') || ! isdirectory(expand('%')) | finish | endif
 let id = range(1,bufnr('$'))
 let taken = map(copy(id),'getbufvar(v:val,"readdir_id")')
 let b:readdir_id = filter(id,'index(taken,v:val) < 0')[0]
+let b:readdir_hidden = get(g:, 'readdir_hidden', 0)
 
 setlocal buftype=nofile noswapfile undolevels=-1 nomodifiable nowrap
 call readdir#Show( simplify( expand('%:p').'.' ), '' )

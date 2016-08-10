@@ -30,7 +30,6 @@ endif
 exe printf( join( [ 'function s:glob(path, nosuf)', 'return %s', 'endfunction' ], "\n" ),
 	\ v:version < 704 ? 'split(glob(a:path, a:nosuf), "\n")' : 'glob(a:path, a:nosuf, 1)' )
 
-let g:readdir_hidden = get(g:, 'readdir_hidden', 0)
 let s:sep = fnamemodify('',':p')[-1:]
 
 function s:set_bufname(name)
@@ -55,8 +54,8 @@ function readdir#Show(path, focus)
 	let path = fnamemodify(b:readdir_cwd, ':p') " ensure trailing slash
 	let b:readdir_content
 		\ = [fnamemodify(b:readdir_cwd,':h')]
-		\ + ( g:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
-		\ + s:glob(path.'*', g:readdir_hidden)
+		\ + ( b:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
+		\ + s:glob(path.'*', b:readdir_hidden)
 
 	setlocal modifiable
 	silent 0,$ delete
@@ -71,7 +70,7 @@ function readdir#Open(path)
 	if isdirectory(a:path) | return readdir#Show( a:path, b:readdir_cwd ) | endif
 
 	if s:set_bufname(a:path)
-		unlet b:readdir_id b:readdir_cwd b:readdir_content
+		unlet b:readdir_id b:readdir_cwd b:readdir_content b:readdir_hidden
 		set modifiable< buftype< filetype< noswapfile< wrap<
 		mapclear <buffer>
 
@@ -91,7 +90,7 @@ function readdir#Open(path)
 endfunction
 
 function readdir#CycleHidden()
-	let g:readdir_hidden = ( g:readdir_hidden + 1 ) % 3
+	let b:readdir_hidden = ( b:readdir_hidden + 1 ) % 3
 	call readdir#Show( b:readdir_cwd, readdir#Selected() )
 endfunction
 
