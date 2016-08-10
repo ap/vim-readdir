@@ -93,15 +93,15 @@ function readdir#Open(path)
 		unlet b:readdir_id b:readdir_cwd b:readdir_content
 		set modifiable< buftype< filetype< noswapfile< wrap<
 		mapclear <buffer>
-		autocmd! ReadDir BufEnter <buffer>
 
-		autocmd ReadDir BufReadPre <buffer> set undolevels< " avoid leaving :edit content change on undo stack
-		go | edit
-
-		" :file sets the notedited flag but :edit does not clear it (see :help not-edited)
-		" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
-		autocmd ReadDir BufWriteCmd <buffer> autocmd! ReadDir * <buffer>
+		" HACK: because :file sets not-edited (:help not-edited) but :edit won't clear it
+		autocmd ReadDir BufWriteCmd <buffer> exe
 		write!
+
+		" reset &undolevels after :edit (creates undo step) but before ftplugins (avoid overriding them)
+		autocmd ReadDir BufReadPre <buffer> exe 'set undolevels<' | autocmd! ReadDir * <buffer>
+
+		go | edit!
 	else " file already open in another buffer, just switch
 		let me = bufnr('%')
 		exe 'edit' a:path
