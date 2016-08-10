@@ -76,7 +76,7 @@ function readdir#Open(path)
 		autocmd ReadDir BufWriteCmd <buffer> exe
 		write!
 
-		" reset &undolevels after :edit (creates undo step) but before ftplugins (avoid overriding them)
+		" reset &undolevels after :edit (avoid undo step) but before ftplugins (avoid overriding them)
 		autocmd ReadDir BufReadPre <buffer> exe 'set undolevels<' | autocmd! ReadDir * <buffer>
 
 		go | edit!
