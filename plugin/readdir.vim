@@ -27,9 +27,7 @@ if v:version < 700
 	finish
 endif
 
-augroup ReadDir
-autocmd!
-autocmd BufEnter,BufNewFile * if isdirectory(expand('<afile>')) | call readdir#Setup() | endif
-augroup END
+augroup ReadDir | augroup END
+autocmd filetypedetect BufEnter,BufNewFile * if isdirectory(expand('<afile>')) | call readdir#Setup() | endif
 
 " vim:foldmethod=marker
