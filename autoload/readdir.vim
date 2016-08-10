@@ -41,18 +41,18 @@ function s:set_bufname(name)
 endfunction
 
 function readdir#Selected()
-	return b:readdir_content[ line('.') - 1 ]
+	return b:readdir.content[ line('.') - 1 ]
 endfunction
 
 function readdir#Show(path, focus)
 	silent lchdir `=a:path`
-	call s:set_bufname(printf('(%d) %s', b:readdir_id, a:path))
+	call s:set_bufname(printf('(%d) %s', b:readdir.id, a:path))
 
 	let path = fnamemodify(a:path, ':p') " ensure trailing slash
 	let content
 		\ = [fnamemodify(a:path,':h')]
-		\ + ( b:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
-		\ + s:glob(path.'*', b:readdir_hidden)
+		\ + ( b:readdir.hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
+		\ + s:glob(path.'*', b:readdir.hidden)
 
 	setlocal modifiable
 	silent 0,$ delete
@@ -62,14 +62,14 @@ function readdir#Show(path, focus)
 	let line = 1 + index(content, a:focus)
 	call cursor(line ? line : 1, 1)
 
-	let [ b:readdir_cwd, b:readdir_content ] = [ a:path, content ]
+	call extend( b:readdir, { 'cwd': a:path, 'content': content } )
 endfunction
 
 function readdir#Open(path)
-	if isdirectory(a:path) | return a:path == b:readdir_cwd || readdir#Show( a:path, b:readdir_cwd ) | endif
+	if isdirectory(a:path) | return a:path == b:readdir.cwd || readdir#Show( a:path, b:readdir.cwd ) | endif
 
 	if s:set_bufname(a:path)
-		unlet b:readdir_id b:readdir_cwd b:readdir_content b:readdir_hidden
+		unlet b:readdir
 		set modifiable< buftype< filetype< noswapfile< wrap<
 		mapclear <buffer>
 
@@ -89,8 +89,8 @@ function readdir#Open(path)
 endfunction
 
 function readdir#CycleHidden()
-	let b:readdir_hidden = ( b:readdir_hidden + 1 ) % 3
-	call readdir#Show( b:readdir_cwd, readdir#Selected() )
+	let b:readdir.hidden = ( b:readdir.hidden + 1 ) % 3
+	call readdir#Show( b:readdir.cwd, readdir#Selected() )
 endfunction
 
 " vim:foldmethod=marker

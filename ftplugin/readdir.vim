@@ -27,21 +27,21 @@ if v:version < 700
 	finish
 endif
 
-if exists('b:readdir_id') || ! isdirectory(expand('%')) | finish | endif
+if exists('b:readdir') || ! isdirectory(expand('%')) | finish | endif
 
 let id = range(1,bufnr('$'))
 let taken = map(copy(id),'getbufvar(v:val,"readdir_id")')
-let b:readdir_id = filter(id,'index(taken,v:val) < 0')[0]
-let b:readdir_hidden = get(g:, 'readdir_hidden', 0)
+let b:readdir = { 'id': filter(id,'index(taken,v:val) < 0')[0] }
+let b:readdir.hidden = get(g:, 'readdir_hidden', 0)
 
 setlocal buftype=nofile noswapfile undolevels=-1 nomodifiable nowrap
 call readdir#Show( simplify( expand('%:p').'.' ), '' )
 
-autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir_cwd`
+autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir.cwd`
 nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
 nnoremap <buffer> <silent> o    :edit `=readdir#Selected()`<CR>
 nnoremap <buffer> <silent> t    :tabedit `=readdir#Selected()`<CR>
-nnoremap <buffer> <silent> -    :call readdir#Open( fnamemodify( b:readdir_cwd, ':h' ) )<CR>
+nnoremap <buffer> <silent> -    :call readdir#Open( fnamemodify( b:readdir.cwd, ':h' ) )<CR>
 nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 
 " vim:foldmethod=marker
