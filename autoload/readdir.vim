@@ -90,7 +90,6 @@ function readdir#Open(path)
 	if isdirectory(a:path) | return readdir#Show( a:path, b:readdir_cwd ) | endif
 
 	if s:set_bufname(a:path)
-		silent chdir `=getcwd()` " reset haslocaldir()
 		unlet b:readdir_id b:readdir_cwd b:readdir_content
 		set modifiable< buftype< filetype< noswapfile< wrap<
 		mapclear <buffer>
