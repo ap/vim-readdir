@@ -45,25 +45,6 @@ function readdir#Selected()
 	return b:readdir_content[ line('.') - 1 ]
 endfunction
 
-function readdir#Setup()
-	if ! isdirectory(expand('%')) | return | endif
-
-	if ! exists('b:readdir_id')
-		let id = range(1,bufnr('$'))
-		let taken = map(copy(id),'getbufvar(v:val,"readdir_id")')
-		let b:readdir_id = filter(id,'index(taken,v:val) < 0')[0]
-	endif
-
-	call readdir#Show( simplify( expand('%:p').'.' ), '' )
-
-	autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir_cwd`
-	nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
-	nnoremap <buffer> <silent> o    :edit `=readdir#Selected()`<CR>
-	nnoremap <buffer> <silent> t    :tabedit `=readdir#Selected()`<CR>
-	nnoremap <buffer> <silent> -    :call readdir#Open( fnamemodify( b:readdir_cwd, ':h' ) )<CR>
-	nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
-endfunction
-
 function readdir#Show(path, focus)
 	if a:path == get(b:, 'readdir_cwd', '') | return | endif
 	let b:readdir_cwd = a:path
@@ -77,7 +58,7 @@ function readdir#Show(path, focus)
 		\ + ( g:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
 		\ + s:glob(path.'*', g:readdir_hidden)
 
-	setlocal modifiable buftype=nofile filetype=readdir noswapfile nowrap undolevels=-1
+	setlocal modifiable
 	silent 0,$ delete
 	call setline( 1, ['..'] + map( b:readdir_content[1:], 'split(v:val,s:sep)[-1] . ( isdirectory(v:val) ? s:sep : "" )' ) )
 	setlocal nomodifiable nomodified
