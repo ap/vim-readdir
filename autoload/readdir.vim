@@ -80,7 +80,7 @@ function readdir#Show(path, focus)
 
 	setlocal modifiable undolevels=-1 buftype=nofile filetype=readdir
 	silent 0,$ delete
-	call setline( 1, ['..'] + map( b:readdir_content[1:], 'split(v:val,s:sep)[-1] . fnamemodify(v:val,":p")[-1:]' ) )
+	call setline( 1, ['..'] + map( b:readdir_content[1:], 'split(v:val,s:sep)[-1] . ( isdirectory(v:val) ? s:sep : "" )' ) )
 	setlocal nomodifiable nomodified
 
 	let line = 1 + index(b:readdir_content, a:focus)
