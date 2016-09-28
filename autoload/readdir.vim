@@ -22,13 +22,13 @@
 " THE SOFTWARE.
 " }}}
 
-if ! has('patch-7.2.051')
-	echoerr printf('Vim 7.3 is required for readdir (this is only %d.%d)',v:version/100,v:version%100)
+if v:version < 700
+	echoerr printf('Vim 7 is required for readdir (this is only %d.%d)',v:version/100,v:version%100)
 	finish
 endif
 
 exe printf( join( [ 'function s:glob(path, nosuf)', 'return %s', 'endfunction' ], "\n" ),
-	\ has('patch-7.3.465') ? 'glob(a:path, a:nosuf, 1)' : 'split(glob(a:path, a:nosuf), "\n")' )
+	\ v:version < 704 ? 'split(glob(a:path, a:nosuf), "\n")' : 'glob(a:path, a:nosuf, 1)' )
 
 let s:sep = fnamemodify('',':p')[-1:]
 
