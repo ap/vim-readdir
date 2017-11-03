@@ -1,0 +1,5 @@
+set nocompatible nobackup noswapfile viminfo=
+set number ruler laststatus=2
+syntax on
+filetype plugin indent on
+let g:loaded_netrwPlugin = 1
