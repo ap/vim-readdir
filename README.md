@@ -1,8 +1,11 @@
-![Readdir](http://ap.github.io/vim-readdir/screenshot.png)
-==========================================================
+<h1 align="center">Readdir</h1>
 
-Readdir is a minimal directory browser in just ~100 lines of VimL. To use it,
-just open a directory and use Enter to change into directories or open files.
+<div align="center">
+A very minimal directory browser in ~100 lines of code<br>
+<img src="https://raw.githubusercontent.com/ap/vim-readdir/d3595f53416c6c0f2dc511b848e99e1c11f053d9/screenshot.png" width="538" height="377">
+</div>
+
+To use it, just `:edit` a directory and use Enter to change into directories or open files.
 
 If you want to suppress Netrw (likely), add this to your `.vimrc`:
 
