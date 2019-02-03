@@ -69,6 +69,7 @@ function readdir#Open(path)
 	if isdirectory(a:path) | return a:path == b:readdir.cwd || readdir#Show( a:path, b:readdir.cwd ) | endif
 
 	if s:set_bufname(a:path)
+		silent lchdir `=b:readdir.initialPath`
 		unlet b:readdir
 		set modifiable< buftype< filetype< noswapfile< wrap<
 		mapclear <buffer>

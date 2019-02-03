@@ -33,9 +33,10 @@ let id = range(1,bufnr('$'))
 let taken = map(copy(id),'getbufvar(v:val,"readdir_id")')
 let b:readdir = { 'id': filter(id,'index(taken,v:val) < 0')[0] }
 let b:readdir.hidden = get(g:, 'readdir_hidden', 0)
+let b:readdir.initialPath = simplify( expand('%:p').'.' )
 
 setlocal buftype=nofile noswapfile undolevels=-1 nomodifiable nowrap
-call readdir#Show( simplify( expand('%:p').'.' ), '' )
+call readdir#Show( b:readdir.initialPath, '' )
 
 autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir.cwd`
 nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
