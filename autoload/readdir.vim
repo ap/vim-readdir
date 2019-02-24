@@ -2,17 +2,17 @@
 " Licence:     The MIT License (MIT)
 " Commit:      $Format:%H$
 " {{{ Copyright (c) 2015 Aristotle Pagaltzis <pagaltzis@gmx.de>
-" 
+"
 " Permission is hereby granted, free of charge, to any person obtaining a copy
 " of this software and associated documentation files (the "Software"), to deal
 " in the Software without restriction, including without limitation the rights
 " to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 " copies of the Software, and to permit persons to whom the Software is
 " furnished to do so, subject to the following conditions:
-" 
+"
 " The above copyright notice and this permission notice shall be included in
 " all copies or substantial portions of the Software.
-" 
+"
 " THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 " IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 " FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -63,13 +63,13 @@ function readdir#Show(path, focus)
 	call cursor(line ? line : 1, 1)
 
 	call extend( b:readdir, { 'cwd': a:path, 'content': content } )
+	silent lchdir `=b:readdir.initialPath`
 endfunction
 
 function readdir#Open(path)
 	if isdirectory(a:path) | return a:path == b:readdir.cwd || readdir#Show( a:path, b:readdir.cwd ) | endif
 
 	if s:set_bufname(a:path)
-		silent lchdir `=b:readdir.initialPath`
 		unlet b:readdir
 		set modifiable< buftype< filetype< noswapfile< wrap<
 		mapclear <buffer>
