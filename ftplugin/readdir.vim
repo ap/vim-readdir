@@ -36,7 +36,7 @@ let b:readdir.hidden = get(g:, 'readdir_hidden', 0)
 let b:readdir.initialPath = getcwd()
 
 setlocal buftype=nofile noswapfile undolevels=-1 nomodifiable nowrap
-call readdir#Show( b:readdir.initialPath, '' )
+call readdir#Show(simplify(expand('%:p').'.'), '' )
 
 autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir.cwd`
 nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
