@@ -20,7 +20,33 @@ If you want to suppress Netrw (likely), add this to your `.vimrc`: >
     let g:loaded_netrwPlugin = 1
 <
 ==============================================================================
-2. Configuration settings                                       *readdir-config*
+2. Maps                                                           *readdir-maps*
+
+The browser is a normal vim buffer with 'nomodifiable' on, so you can use the
+same movement commands you would for any other buffer.
+
+In addition, this plugin supports the following commands:
+
+                                                *readdir_<CR>*
+<CR>                    Open the selected file and switch to it, closing the
+                        browser.
+
+                                                *readdir_o*
+o                       Open the selected file and switch to it, leaving the
+                        browser open.
+
+                                                *readdir_t*
+t                       Open the selected file in a new tab and switch to it,
+                        leaving the browser open.
+
+                                                *readdir_-*
+-                       Change to the parent directory (`cd ..`).
+
+                                                *readdir_a*
+a                       Toggle showing/hiding hidden files.
+
+==============================================================================
+3. Configuration settings                                       *readdir-config*
 
 *g:readdir_hidden*          number (default 0)
 
@@ -28,11 +54,11 @@ If you want to suppress Netrw (likely), add this to your `.vimrc`: >
              0: hide hidden files and respect 'wildignore'
              1: hide hidden files only
              2: show everything
-    You can cycle this setting with the "a" mapping.
+    You can cycle this setting with the |a| mapping.
 
 
 ==============================================================================
-3. Source                                                    *buftabline-source*
+4. Source                                                    *buftabline-source*
 
 https://github.com/ap/vim-readdir
 
