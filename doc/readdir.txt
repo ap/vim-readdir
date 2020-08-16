@@ -13,12 +13,41 @@
 ==============================================================================
 1. Intro                                                         *readdir-intro*
 
-This plugin detects implements a minimal directory browser. To use it, just
-open a directory and use Enter to change into directories or open files.
+This plugin implements a minimalistic directory browser. To use it, simply
+|:edit| a directory and then use normal movement commands to place the cursor.
+(Note you will probably want to suppress Netrw; see |g:loaded_netrwPlugin|.)
 
-If you want to suppress Netrw (likely), add this to your `.vimrc`: >
-    let g:loaded_netrwPlugin = 1
-<
+Filesystem navigation is done with the following commands:
+
+                                                        *readdir_<CR>*
+<CR>                    Open the entry under the cursor in the current buffer.
+
+                        This replaces the browser, either by a browser for the
+                        selected directory, or by the selected file. If the
+                        file was already open in another buffer, the browser
+                        is simply closed, and that buffer is switched to.
+
+                                                        *readdir_o*
+o                       Open the entry under the cursor in a new buffer.
+
+                        This switches to the new buffer and leaves the current
+                        browser buffer behind. If the entry is a file and that
+                        file was already open in another buffer, that buffer
+                        is switched to.
+
+                                                        *readdir_t*
+t                       Open the entry under the cursor in a new tab.
+
+                        This always creates a new tab and always leaves the
+                        current browser buffer behind.
+
+                                                        *readdir_-*
+-                       Open the parent directory in the current buffer.
+
+                                                        *readdir_a*
+a                       Cycle the |g:readdir_hidden| setting for this buffer.
+
+
 ==============================================================================
 2. Configuration settings                                       *readdir-config*
 
@@ -28,8 +57,12 @@ If you want to suppress Netrw (likely), add this to your `.vimrc`: >
              0: hide hidden files and respect 'wildignore'
              1: hide hidden files only
              2: show everything
-    You can cycle this setting with the "a" mapping.
 
+*g:loaded_netrwPlugin*      boolean (default false)
+
+    This option prevents Netrw from loading if set in your `.vimrc`: >
+             let g:loaded_netrwPlugin = 1
+<
 
 ==============================================================================
 3. Source                                                    *buftabline-source*
